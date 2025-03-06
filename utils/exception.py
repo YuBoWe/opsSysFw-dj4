@@ -24,12 +24,17 @@ class AttributeError(MyException):
 
 class InvalidToken(MyException):
     status_code = 1002
-    message = '未认证成功，请重新登录'
+    message = '登录超时，请重新登录'
 
 
 class AuthenticationFailed(MyException):
     status_code = 1003
-    message = '用户名或者密码错误，请重新登录'
+    message = '用户名或者密码错误或者该用户未激活，请重新登录'
+
+
+class NotAuthenticated(MyException):
+    status_code = 1004
+    message = "用户未登录，请用户登录"
 
 
 exp_map = {
@@ -38,6 +43,7 @@ exp_map = {
     'AttributeError': AttributeError,
     'InvalidToken': InvalidToken,
     'AuthenticationFailed': AuthenticationFailed,
+    'NotAuthenticated': NotAuthenticated,
 }
 
 

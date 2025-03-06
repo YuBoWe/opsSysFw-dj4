@@ -37,8 +37,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'user',
     'rest_framework_simplejwt',
+    'user',
 ]
 
 MIDDLEWARE = [
@@ -150,5 +150,17 @@ REST_FRAMEWORK = {
     'EXCEPTION_HANDLER': 'utils.exception.custom_exception_handler',
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_simplejwt.authentication.JWTAuthentication',
-    )
+    ),
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.IsAuthenticated',
+    ],
+    'DEFAULT_PAGINATION_CLASS': 'utils.pagination.MyPagination',
+    'PAGE_SIZE': 10
 }
+
+from datetime import timedelta
+SIMPLE_JWT = {
+    "ACCESS_TOKEN_LIFETIME": timedelta(hours=24),
+}
+
+AUTH_USER_MODEL = "user.UserProfile"

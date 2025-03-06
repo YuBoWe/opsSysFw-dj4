@@ -1,10 +1,10 @@
-from django.urls import path
-from rest_framework_simplejwt.views import (
-    TokenObtainPairView,
-    TokenRefreshView,
-)
+from django.urls import path, include
+from user.views import menu_list, UserViewSet
+from rest_framework.routers import SimpleRouter
+
+router = SimpleRouter()
+router.register('', UserViewSet)
 
 urlpatterns = [
-    path('token/', TokenObtainPairView.as_view()),
-    path('token/refresh/', TokenRefreshView.as_view()),
-]
+    path('menu/', menu_list),
+] + router.urls
