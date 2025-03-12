@@ -2,16 +2,69 @@ from rest_framework.request import Request
 from rest_framework.response import Response
 from django.http import HttpResponse
 from django.contrib import auth
-from rest_framework.decorators import api_view, permission_classes
+from rest_framework.decorators import api_view, permission_classes, action
 from rest_framework.permissions import IsAdminUser, BasePermission
 from rest_framework.viewsets import ModelViewSet
 from django.contrib.auth import get_user_model
 from user.serializer import UserSerializers
+from django.http.response import Http404
+from .models import UserProfile
+from utils.exception import InvalidPassword
 
 
 class UserViewSet(ModelViewSet):
     queryset = get_user_model().objects.all()
     serializer_class = UserSerializers
+
+    def partial_update(self, request, *args, **kwargs):
+        request.data.pop('username', None)
+        request.data.pop('id', None)
+        request.data.pop('password', None)
+        request.data.pop('is_superuser', None)
+        return super().partial_update(request, *args, **kwargs)
+
+    def get_queryset(self):
+        qs = super().get_queryset()
+        username = self.request.query_params.get('username', None)
+        if username:
+            qs = qs.filter(username__icontains=username)
+        return qs
+
+    def get_object(self):
+        if self.request.method.lower() != 'get':
+            pk = self.kwargs.get('pk')
+            if pk == 1 or pk == '1':
+                print('禁止操作管理员')
+                raise Http404
+        return super().get_object()
+
+    @action(['GET'], detail=False, url_path='whoami')
+    def whoami(self, request):
+        print(request.user)
+        return Response({
+            'user': {
+                'id': request.user.id,
+                'username': request.user.username
+            }
+        })
+
+    @action(['POST'], detail=True, url_path='setpwd')
+    def setpwd(self, request, pk):
+        if int(pk) != request.user.id:
+            raise Http404
+        user: UserProfile = self.get_object()
+        if user.check_password(request.data['oldpass']):
+            user.set_password(request.data['newpass'])
+            user.save()
+            return Response()
+        raise InvalidPassword
+
+    @action(['POST'], detail=True, url_path='setuserspwd')
+    def setuserspwd(self, request, pk):
+        user: UserProfile = self.get_object()
+        user.set_password(request.data['newpass'])
+        user.save()
+        return Response()
 
 
 class IsSuperUser(BasePermission):
@@ -37,7 +90,6 @@ class MenuList(dict):
 
 
 @api_view(['GET'])
-@permission_classes([])
 # Create your views here.
 def menu_list(request: Request):
     # print('*'*20)

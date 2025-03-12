@@ -8,3 +8,4 @@ router.register('', UserViewSet)
 urlpatterns = [
     path('menu/', menu_list),
 ] + router.urls
+print(urlpatterns)

@@ -4,7 +4,7 @@ from rest_framework.response import Response
 
 
 class MyException(APIException):
-    status_code = 10000
+    status_code = 1000
     message = '未知错误，请联系管理员，电话13598263357'
 
     @classmethod
@@ -12,28 +12,33 @@ class MyException(APIException):
         return {'code': cls.status_code, 'message': cls.message}
 
 
+class InvalidPassword(MyException):
+    status_code = 101
+    message = '密码错误，请重新输入'
+
+
 class DoseNotExistException(MyException):
-    status_code = 1000
+    status_code = 1001
     message = 'Employee matching query does not exist.'
 
 
 class AttributeError(MyException):
-    status_code = 1001
+    status_code = 1002
     message = '对应的处理handler不存在'
 
 
 class InvalidToken(MyException):
-    status_code = 1002
+    status_code = 1003
     message = '登录超时，请重新登录'
 
 
 class AuthenticationFailed(MyException):
-    status_code = 1003
+    status_code = 1004
     message = '用户名或者密码错误或者该用户未激活，请重新登录'
 
 
 class NotAuthenticated(MyException):
-    status_code = 1004
+    status_code = 1005
     message = "用户未登录，请用户登录"
 
 
