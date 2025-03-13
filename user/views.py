@@ -1,15 +1,29 @@
 from rest_framework.request import Request
 from rest_framework.response import Response
 from django.http import HttpResponse
-from django.contrib import auth
+from django.contrib.auth.models import Permission, ContentType, Group
 from rest_framework.decorators import api_view, permission_classes, action
 from rest_framework.permissions import IsAdminUser, BasePermission
-from rest_framework.viewsets import ModelViewSet
+from rest_framework.viewsets import ModelViewSet, ReadOnlyModelViewSet
 from django.contrib.auth import get_user_model
-from user.serializer import UserSerializers
+from user.serializer import UserSerializers, PermSerializers
 from django.http.response import Http404
 from .models import UserProfile
 from utils.exception import InvalidPassword
+from rest_framework import filters
+
+_exclude_contenttypes = [c.id for c in ContentType.objects.filter(model__in=
+[
+    'logentry', 'group', 'permission',
+    'contenttype', 'session'
+])]
+
+
+class PermViewSet(ReadOnlyModelViewSet):
+    queryset = Permission.objects.exclude(content_type__in=_exclude_contenttypes)
+    serializer_class = PermSerializers
+    filter_backends = [filters.SearchFilter]
+    search_fields = ['name', 'codename']
 
 
 class UserViewSet(ModelViewSet):
@@ -103,8 +117,8 @@ def menu_list(request: Request):
     i2 = MenuList(mid=2, name="资产管理")
     i101 = MenuList(mid=101, name="用户列表", path="users/")
     i102 = MenuList(mid=102, name="角色管理", path="users/roles/")
-    i103 = MenuList(mid=103, name="权限管理", path="users/perms/")
-    i1.append(i101).append(i102)
+    i103 = MenuList(mid=103, name="权限列表", path="users/perms/")
+    i1.append(i101).append(i102).append(i103)
     menu_item.extend([i1, i2])
 
     return Response({

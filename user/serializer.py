@@ -2,6 +2,21 @@ from rest_framework.serializers import ModelSerializer
 from .models import UserProfile
 from django.contrib.auth.hashers import make_password
 from rest_framework.exceptions import ValidationError
+from django.contrib.auth.models import Permission, ContentType, Group
+
+
+class ContentTypeSerializers(ModelSerializer):
+    class Meta:
+        model = ContentType
+        fields = '__all__'
+
+
+class PermSerializers(ModelSerializer):
+    class Meta:
+        model = Permission
+        fields = '__all__'
+
+    content_type = ContentTypeSerializers(read_only=True)
 
 
 class UserSerializers(ModelSerializer):
