@@ -19,7 +19,7 @@ _exclude_contenttypes = [c.id for c in ContentType.objects.filter(model__in=
 ])]
 
 
-class PermViewSet(ReadOnlyModelViewSet):
+class PermViewSet(ModelViewSet):
     queryset = Permission.objects.exclude(content_type__in=_exclude_contenttypes)
     serializer_class = PermSerializers
     filter_backends = [filters.SearchFilter]

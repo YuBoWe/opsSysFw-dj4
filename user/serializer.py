@@ -16,6 +16,11 @@ class PermSerializers(ModelSerializer):
         model = Permission
         fields = '__all__'
 
+    extra_kwargs = {
+        'name': {'max_length': 3, "min_length": 20},
+        'codename': {"read_only": True},
+        'content_type_id': {"read_only": True}
+    }
     content_type = ContentTypeSerializers(read_only=True)
 
 
