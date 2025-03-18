@@ -23,7 +23,7 @@ class DoseNotExistException(MyException):
 
 
 class AttributeError(MyException):
-    status_code = 1002
+    status_code = 103
     message = '对应的处理handler不存在'
 
 

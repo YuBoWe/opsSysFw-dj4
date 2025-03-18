@@ -5,6 +5,12 @@ from rest_framework.exceptions import ValidationError
 from django.contrib.auth.models import Permission, ContentType, Group
 
 
+class RoleSerializer(ModelSerializer):
+    class Meta:
+        model = Group
+        fields = '__all__'
+
+
 class ContentTypeSerializers(ModelSerializer):
     class Meta:
         model = ContentType

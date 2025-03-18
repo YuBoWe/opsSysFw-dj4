@@ -154,6 +154,7 @@ REST_FRAMEWORK = {
     ),
     'DEFAULT_PERMISSION_CLASSES': [
         'rest_framework.permissions.IsAuthenticated',
+        'utils.permissions.CRUDModelPermissions',
     ],
     'DEFAULT_PAGINATION_CLASS': 'utils.pagination.MyPagination',
     'PAGE_SIZE': 5
