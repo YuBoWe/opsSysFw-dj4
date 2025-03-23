@@ -22,7 +22,7 @@ _exclude_contenttypes = [c.id for c in ContentType.objects.filter(model__in=
 class RoleViewSet(ModelViewSet):
     queryset = Group.objects.all()
     serializer_class = RoleSerializer
-    filter_backends = [filters.SearchFilter]
+    # filter_backends = [filters.SearchFilter]
     search_fields = ['name']
 
     @action(['GET'], detail=True, url_path='perms')

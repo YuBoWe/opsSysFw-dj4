@@ -39,7 +39,11 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework_simplejwt',
+    'django_filters',
+    'rest_framework',
+    'rest_framework_mongoengine',
     'user',
+    'cmdb',
 ]
 
 MIDDLEWARE = [
@@ -85,6 +89,13 @@ DATABASES = {
         "HOST": "10.0.0.139",
         "PORT": "3306",
     }
+}
+
+MONGO_DATABASES = {
+    'name': 'cmdb',
+    'port': 27017,
+    'host': '10.0.0.139',
+    'tz_aware': True
 }
 
 
@@ -148,6 +159,7 @@ LOGGING = {
 }
 
 REST_FRAMEWORK = {
+    'DEFAULT_FILTER_BACKENDS': ['django_filters.rest_framework.DjangoFilterBackend'],
     'EXCEPTION_HANDLER': 'utils.exception.custom_exception_handler',
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_simplejwt.authentication.JWTAuthentication',

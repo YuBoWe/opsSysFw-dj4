@@ -21,6 +21,7 @@ from rest_framework_simplejwt.views import (
 )
 
 urlpatterns = [
+    path('cmdb/', include('cmdb.urls')),
     path('users/', include('user.urls')),
     path('token/', TokenObtainPairView.as_view()),
     path('token/refresh/', TokenRefreshView.as_view()),
