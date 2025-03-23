@@ -22,7 +22,7 @@ _exclude_contenttypes = [c.id for c in ContentType.objects.filter(model__in=
 class RoleViewSet(ModelViewSet):
     queryset = Group.objects.all()
     serializer_class = RoleSerializer
-    # filter_backends = [filters.SearchFilter]
+    filter_backends = [filters.SearchFilter]
     search_fields = ['name']
 
     @action(['GET'], detail=True, url_path='perms')
@@ -150,6 +150,8 @@ def menu_list(request: Request):
         i103 = MenuList(mid=103, name="权限列表", path="users/perms/")
         i1.append(i101).append(i102).append(i103)
         menu_item.append(i1)
+    i201 = MenuList(mid=201, name="资产类型", path="cmdb/citypes/")
+    i2.append(i201)
     menu_item.append(i2)
     return Response({
         'default': '101',
