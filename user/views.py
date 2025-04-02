@@ -151,7 +151,8 @@ def menu_list(request: Request):
         i1.append(i101).append(i102).append(i103)
         menu_item.append(i1)
     i201 = MenuList(mid=201, name="资产类型", path="cmdb/citypes/")
-    i2.append(i201)
+    i202 = MenuList(mid=202, name="资产列表", path="cmdb/cis/")
+    i2.append(i201).append(i202)
     menu_item.append(i2)
     return Response({
         'default': '101',
