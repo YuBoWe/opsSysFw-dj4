@@ -4,8 +4,8 @@ from cmdb.serializers import CiTypSerializer, CiSerializer, CiTypGetFieldSeriali
 from rest_framework.decorators import api_view, permission_classes, action
 from rest_framework.response import Response
 from rest_framework.request import Request
-
 from utils.permissions import CRUDdDocumentPermissions
+from utils.filters import MongoSearchFilter
 
 
 def get_max_version_documents():
@@ -31,20 +31,20 @@ class CiViewSet(CMDBViewSet):
     # print('~~~'*49)
     # print(Ci.__dict__)
     # print('~~~'*49)
+    filter_backends = [MongoSearchFilter]
+    mongo_search_fields = ['name__value', 'ci_type', 'Brand__value']
 
-    def get_queryset(self):
-        qs = super().get_queryset()
-        name = self.request.query_params.get('name', None)
-        if name:
-            qs = qs.filter(name__icontains=name)
-        return qs
+    # def get_queryset(self):
+    #     qs = super().get_queryset()
+    #     name = self.request.query_params.get('name', None)
+    #     if name:
+    #         qs = qs.filter(name__icontains=name)
+    #     return qs
 
 
 class CiTypeViewSet(CMDBViewSet):
     queryset = CiType.objects.all()
     serializer_class = CiTypSerializer
-
-    permission_classes = []  # 暂时移除所有权限要求
 
     def get_serializer_class(self):
         if 'id' in self.kwargs:

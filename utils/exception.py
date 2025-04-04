@@ -12,6 +12,11 @@ class MyException(APIException):
         return {'code': cls.status_code, 'message': cls.message}
 
 
+class PermissionDenied(MyException):
+    status_code = 104
+    message = '用户无权限，请联系管理员授权'
+
+
 class InvalidPassword(MyException):
     status_code = 101
     message = '密码错误，请重新输入'
@@ -49,6 +54,7 @@ exp_map = {
     'InvalidToken': InvalidToken,
     'AuthenticationFailed': AuthenticationFailed,
     'NotAuthenticated': NotAuthenticated,
+    'PermissionDenied': PermissionDenied,
 }
 
 

@@ -13,7 +13,17 @@ class CRUDModelPermissions(DjangoModelPermissions):
     }
 
 
-class CRUDdDocumentPermissions(CRUDModelPermissions):
+class CRUDdDocumentPermissions(DjangoModelPermissions):
+    perms_map = {
+        'GET': ['%(app_label)s.can_%(model_name)s'],
+        'OPTIONS': [],
+        'HEAD': [],
+        'POST': ['%(app_label)s.can_%(model_name)s'],
+        'PUT': ['%(app_label)s.can_%(model_name)s'],
+        'PATCH': ['%(app_label)s.can_%(model_name)s'],
+        'DELETE': ['%(app_label)s.can_%(model_name)s'],
+    }
+
     def has_permission(self, request, view):
         if getattr(view, '_ignore_model_permissions', False):
             return True
@@ -22,7 +32,6 @@ class CRUDdDocumentPermissions(CRUDModelPermissions):
         print(queryset.__dict__)
         print('~~~' * 49)
         perms = self.get_required_permissions(request.method, queryset._document)
-
         return request.user.has_perms(perms)
 
     def get_required_permissions(self, method, model_cls):
