@@ -1,6 +1,6 @@
 from rest_framework_mongoengine.viewsets import ModelViewSet
-from cmdb.models import CiType, Ci
-from cmdb.serializers import CiTypSerializer, CiSerializer, CiTypGetFieldSerializer
+from cmdb.models import CiType, Ci, ServerInfo
+from cmdb.serializers import CiTypSerializer, CiSerializer, CiTypGetFieldSerializer, ServerSerializer
 from rest_framework.decorators import api_view, permission_classes, action
 from rest_framework.response import Response
 from rest_framework.request import Request
@@ -23,6 +23,42 @@ def get_max_version_documents():
 class CMDBViewSet(ModelViewSet):
     from rest_framework.permissions import IsAuthenticated
     permission_classes = [IsAuthenticated, CRUDdDocumentPermissions]
+
+
+class ServerInfoViewSet(CMDBViewSet):
+    queryset = ServerInfo.objects.all()
+    serializer_class = ServerSerializer
+
+    @action(['GET'], detail=False)
+    def postmachineinfo(self, request: Request):
+        # 提交服务器信息
+        ip = request.query_params['ipadd_in']
+        hostname = request.query_params['hostname']
+
+        queryset = ServerInfo.objects(ipadd_in=ip).first()
+        serializer = ServerSerializer(queryset)
+        print(serializer.data)
+        # id = int(data['id'])
+        'update--->'
+        # server = Server.objects.get(pk=id)
+        # data = get_info(server.in_ip)
+        # server.os_version = data['sysinfo']
+        # server.host_name = data['host_name']
+        # server.os_kernel = data['os_kernel']
+        # server.cpu_model = data['cpu']
+        # server.cpu_count = data['cpu_count']
+        # server.cpu_cores = data['cpu_cores']
+        # server.mem = data['mem']
+        # server.disk = data['disk']
+        # server.status = True
+        # server.max_open_files = get_ulimit(server.in_ip)
+        # server.uptime = get_uptime(server.in_ip)
+        # server.save()
+        #
+        # # set_service_port(server)  # 设置服务端口信息
+        # response.write(json.dumps(u'成功'))
+        # return response
+        return Response(serializer.data)
 
 
 class CiViewSet(CMDBViewSet):

@@ -1,6 +1,12 @@
 from rest_framework_mongoengine.serializers import DocumentSerializer, DynamicDocumentSerializer
-from cmdb.models import CiType, Ci
+from cmdb.models import CiType, Ci, ServerInfo
 from .models import CiTypeField
+
+
+class ServerSerializer(DynamicDocumentSerializer):
+    class Meta:
+        model = ServerInfo
+        fields = '__all__'
 
 
 class CiTypGetFieldSerializer(DocumentSerializer):
