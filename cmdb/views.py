@@ -70,6 +70,28 @@ class CiViewSet(CMDBViewSet):
     filter_backends = [MongoSearchFilter]
     mongo_search_fields = ['name__value', 'ci_type', 'Brand__value']
 
+    @action(['PATCH'], detail=True)
+    def update_cis(self, request, id):
+        print(id)
+        instance = self.get_object()
+        print('!!!!!!!!!!!!!!!!!!!!')
+        print(instance)
+        print(request.data)
+        request.data.pop('id')
+        print(request.data)
+        print('!!!!!!!!!!!!!!!!!!!!')
+        serializer = self.get_serializer(instance, data=request.data)
+        serializer.is_valid(raise_exception=True)
+        self.perform_update(serializer)
+        #
+        if getattr(instance, '_prefetched_objects_cache', None):
+            # If 'prefetch_related' has been applied to a queryset, we need to
+            # forcibly invalidate the prefetch cache on the instance.
+            instance._prefetched_objects_cache = {}
+
+        return Response(serializer.data)
+        # return Response()
+
     # def get_queryset(self):
     #     qs = super().get_queryset()
     #     name = self.request.query_params.get('name', None)
