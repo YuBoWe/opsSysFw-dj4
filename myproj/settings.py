@@ -160,7 +160,7 @@ LOGGING = {
 
 REST_FRAMEWORK = {
     'DEFAULT_FILTER_BACKENDS': ['django_filters.rest_framework.DjangoFilterBackend'],
-    # 'EXCEPTION_HANDLER': 'utils.exception.custom_exception_handler',
+    'EXCEPTION_HANDLER': 'utils.exception.custom_exception_handler',
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_simplejwt.authentication.JWTAuthentication',
     ),
